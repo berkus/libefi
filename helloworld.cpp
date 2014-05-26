@@ -1,18 +1,13 @@
 // Simple EFI hello-world.
-
-#include <efi.h>
-#include <efilib.h>
+#include "efi/efi.h"
 
 EFI_STATUS
 EFIAPI
 efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 {
-  SIMPLE_TEXT_OUTPUT_INTERFACE *conout;
-  InitializeLib(ImageHandle, SystemTable);
-  conout = SystemTable->ConOut;
+    (void)ImageHandle; // unused
 
-  uefi_call_wrapper(conout->OutputString, 2, conout, (CHAR16 *)L"Hello World\n\r");
+    SystemTable->ConOut->OutputString(L"Hello World\n\r");
 
-  return EFI_SUCCESS;
+    return EFI_SUCCESS;
 }
-
