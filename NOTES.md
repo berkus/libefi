@@ -10,27 +10,26 @@ jnc100
   [1]: http://www.tysos.org/redmine/projects/tysos/repository/show/branches/tysila3/tload/tloadefi
 
 
+## With mingw toolchain
 
-../toolchain/clang/bin/clang -target i386-pc-win32-coff -I../gnu-efi/inc -I../gnu-efi/inc/ia32 -Ignu-efi/inc/protocol -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include -ffreestanding -Wall -Wextra -mno-sse -mno-sse2 -mno-mmx -c -o kernel.o kernel.c
+/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-gcc -I../gnu-efi/inc -I../gnu-efi/inc/ia32 -I../gnu-efi/inc/protocol -ffreestanding -Wall -Wextra -fno-stack-protector -fno-leading-underscore -fshort-wchar -mno-sse -mno-sse2 -mno-mmx -c -o kernel.o kernel.c
 
-../toolchain/clang/bin/lld -flavor link /out:kernel.efi /entry:efi_main kernel.o
+/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-gcc -nostdlib -Wl,-dll -shared -Wl,--subsystem,10 -e efi_main -o kernel.efi kernel.o
 
-Undefined symbol: kernel.o: _InitializeLib
-symbol(s) not found
+## With clang toolchain
 
-[ ] Now need to build libgnuefi properly...
+../toolchain/clang/bin/clang -target i386-pc--coff -I../gnu-efi/inc -I../gnu-efi/inc/ia32 -Ignu-efi/inc/protocol -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include -ffreestanding -fno-stack-protector -fpic -fshort-wchar -Wall -Wextra -mno-sse -mno-sse2 -mno-mmx -c -o kernel.o kernel.c
 
+../toolchain/clang/bin/lld -flavor link /out:kernel.efi /entry:efi_main /subsystem:efi_application kernel.o
 
+## Working sample
 
+Compile with mingw, link with lld:
 
+/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-gcc -I../gnu-efi/inc -I../gnu-efi/inc/ia32 -I../gnu-efi/inc/protocol -ffreestanding -Wall -Wextra -fno-stack-protector -fleading-underscore -fshort-wchar -mno-sse -mno-sse2 -mno-mmx -c -o kernel.o kernel.c
 
+../toolchain/clang/bin/lld -flavor link /out:kernel.efi /entry:efi_main /subsystem:efi_application kernel.o
 
+mv kernel.efi efiboot/
 
-
-
-
-
-
-
-
-
+qemu-system-i386 -bios bios.bin -hdb fat:efiboot
