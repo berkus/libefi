@@ -10,8 +10,9 @@
 
 #include <stdint.h>
 
-// #define EFIAPI __attribute__((cdecl))  // 32 bits
-#define EFIAPI __attribute__((ms_abi)) // 64 bits
+// Calling convention specifier for UEFI-callable functions.
+// ms_abi works for both 32 and 64 bit, since on 32 bits system is it equivalent of required cdecl.
+#define EFIAPI __attribute__((ms_abi))
 
 #define EFI_IN
 #define EFI_OUT
