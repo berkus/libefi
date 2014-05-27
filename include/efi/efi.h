@@ -14,8 +14,13 @@
 // ms_abi works for both 32 and 64 bit, since on 32 bits system is it equivalent of required cdecl.
 #define EFIAPI __attribute__((ms_abi))
 
+// Documentation markers for which arguments in UEFI-callable functions are IN and which are OUT.
 #define EFI_IN
 #define EFI_OUT
+
+//=================================================================================================
+// EFI defined types
+//=================================================================================================
 
 typedef unsigned int EFI_STATUS;
 typedef void*        EFI_HANDLE;
@@ -30,21 +35,10 @@ enum : EFI_STATUS {
     EFI_ERROR = 1
 };
 
-typedef EFI_HANDLE EFI_RUNTIME_SERVICES; //temp
-typedef EFI_HANDLE EFI_BOOT_SERVICES; //temp
 typedef EFI_HANDLE EFI_CONFIGURATION_TABLE; //temp
 typedef EFI_HANDLE EFI_SIMPLE_TEXT_INPUT_PROTOCOL; //temp
 
-struct EFI_TABLE_HEADER
-{
-    uint64_t Signature;
-    uint32_t Revision;
-    uint32_t HeaderSize;
-    uint32_t CRC32;
-    uint32_t Reserved;
-};
-
-struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL
+class EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL
 {
     EFI_STATUS (EFIAPI *_reset)(
         EFI_IN EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL* This,
@@ -61,6 +55,7 @@ struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL
     // EFI_TEXT_ENABLE_CURSOR EnableCursor;
     // SIMPLE_TEXT_OUTPUT_MODE* Mode;
 
+public:
     EFI_STATUS Reset(bool ExtendedVerification = false) {
         return _reset(this, ExtendedVerification);
     }
@@ -69,6 +64,39 @@ struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL
     }
 };
 
+//=================================================================================================
+// EFI defined tables
+//=================================================================================================
+
+/**
+ * Shared table header.
+ */
+struct EFI_TABLE_HEADER
+{
+    uint64_t Signature;
+    uint32_t Revision;
+    uint32_t HeaderSize;
+    uint32_t CRC32;
+    uint32_t Reserved;
+};
+
+/**
+ * Services used by OS Loader in pre-boot environment.
+ * Use ExitBootServices() to free this table and continue booting an OS.
+ */
+struct EFI_BOOT_SERVICES
+{
+    EFI_TABLE_HEADER                 Hdr;
+};
+
+struct EFI_RUNTIME_SERVICES
+{
+    EFI_TABLE_HEADER                 Hdr;
+};
+
+/**
+ * System table passed to main function in EFI Applications, Drivers and OS Loaders alike.
+ */
 struct EFI_SYSTEM_TABLE
 {
     EFI_TABLE_HEADER                 Hdr;
