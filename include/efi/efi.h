@@ -17,8 +17,9 @@ namespace efi {
 #define EFIAPI __attribute__((ms_abi))
 
 // Documentation markers for which arguments in UEFI-callable functions are IN and which are OUT.
-#define EFI_IN
-#define EFI_OUT
+#define EFI_IN             // Function input argument.
+#define EFI_OUT            // Function output argument.
+#define EFI_OPTIONAL       // Function optional argument, can be supplied as nullptr.
 
 //=================================================================================================
 // EFI defined types
