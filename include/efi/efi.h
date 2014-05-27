@@ -378,6 +378,8 @@ struct system_table_t : public table_header_t
 
 public:
     inline bool is_valid_signature() const { return Signature == SIGNATURE; }
+
+    runtime_services_t& get_runtime() { return *RuntimeServices; }
 };
 
 void InitializeLib(handle_t ImageHandle, system_table_t *systemTable);
