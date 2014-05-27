@@ -10,10 +10,12 @@ efi_main(handle_t ImageHandle, system_table_t *st)
 {
     (void)ImageHandle; // unused
 
-    st->StdErr->output_string(L"\u25ba Error logging\n\r");
+    st->ConOut->output_string(L"\u25ba Welcome\n\r");
     st->ConOut->output_string(L"Hello EFI World\n\r");
     st->ConOut->output_string(st->FirmwareVendor);
     st->ConOut->output_string(L"\n\r");
+
+    st->get_runtime().shutdown();
 
     return EFI_SUCCESS;
 }
