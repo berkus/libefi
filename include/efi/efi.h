@@ -120,6 +120,14 @@ struct memory_descriptor_t
     uint64_t           Attribute;
 };
 
+enum reset_type : unsigned int
+{
+    cold,
+    warm,
+    shutdown,
+    platform_specific
+};
+
 //=================================================================================================
 // EFI defined tables
 //=================================================================================================
@@ -316,7 +324,12 @@ struct runtime_services_t : public table_header_t
     // Miscellaneous services
     //
     void* _GetNextHighMonotonicCount;
-    void* _ResetSystem;
+    /// Resets the entire platform.
+    void (EFIAPI *_ResetSystem)(
+        EFI_IN reset_type         ResetType,
+        EFI_IN status_t           ResetStatus,
+        EFI_IN unsigned int       DataSize,
+        EFI_IN EFI_OPTIONAL void* ResetData);
     //
     // UEFI 2.0 Capsule services
     //
@@ -329,6 +342,9 @@ struct runtime_services_t : public table_header_t
 
 public:
     inline bool is_valid_signature() const { return Signature == SIGNATURE; }
+
+    void reboot()   { _ResetSystem(reset_type::warm, EFI_SUCCESS, 0, nullptr); }
+    void shutdown() { _ResetSystem(reset_type::shutdown, EFI_SUCCESS, 0, nullptr); }
 };
 
 /**
