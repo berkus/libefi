@@ -18,15 +18,18 @@
 #define EFI_OUT
 
 typedef unsigned int EFI_STATUS;
-typedef void* EFI_HANDLE;
-typedef void* EFI_EVENT;
-typedef char EFI_GUID[16];
-typedef uint64_t EFI_LBA;
+typedef void*        EFI_HANDLE;
+typedef EFI_HANDLE   EFI_IMAGE;
+typedef void*        EFI_EVENT;
+typedef char         EFI_GUID[16];
+typedef uint64_t     EFI_LBA;
 typedef unsigned int EFI_TPL;
 
-enum { EFI_SUCCESS = 0, EFI_ERROR = 1 };
+enum : EFI_STATUS {
+    EFI_SUCCESS = 0,
+    EFI_ERROR = 1
+};
 
-typedef EFI_HANDLE EFI_IMAGE;
 typedef EFI_HANDLE EFI_RUNTIME_SERVICES; //temp
 typedef EFI_HANDLE EFI_BOOT_SERVICES; //temp
 typedef EFI_HANDLE EFI_CONFIGURATION_TABLE; //temp
