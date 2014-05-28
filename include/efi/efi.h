@@ -76,6 +76,8 @@ class simple_text_output_protocol_t
     // SIMPLE_TEXT_OUTPUT_MODE* Mode;
 
 public:
+    static constexpr guid_t guid = {0x0};
+
     status_t reset(bool extended_verification = false) {
         return _Reset(this, extended_verification);
     }
