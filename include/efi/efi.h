@@ -48,6 +48,79 @@ enum : status_t {
 typedef handle_t EFI_SIMPLE_TEXT_INPUT_PROTOCOL; //temp
 
 //=================================================================================================
+// EFI defined supplemental types
+//=================================================================================================
+
+struct time_t
+{
+    uint16_t Year;         // 1900 - 9999
+    uint8_t  Month;        // 1 - 12
+    uint8_t  Day;          // 1 - 31
+    uint8_t  Hour;         // 0 - 23
+    uint8_t  Minute;       // 0 - 59
+    uint8_t  Second;       // 0 - 59
+    uint8_t  Pad1;
+    uint32_t Nanosecond;   // 0 - 999,999,999
+    int16_t  TimeZone;     // -1440 - 1440 or 2047
+    uint8_t  Daylight;
+    uint8_t  Pad2;
+};
+
+struct time_capabilities_t
+{
+    uint32_t Resolution;
+    uint32_t Accuracy;
+    uint8_t  SetsToZero;
+};
+
+/**
+ * Descriptor for virtual memory and memory map operations.
+ */
+struct memory_descriptor_t
+{
+    uint32_t           Type;
+    physical_address_t PhysicalStart;
+    virtual_address_t  VirtualStart;
+    uint64_t           NumberOfPages;
+    uint64_t           Attribute;
+};
+
+enum allocate_type : unsigned int
+{
+    any_pages,
+    max_address,
+    address,
+    max_allocate_type
+};
+
+enum memory_type : unsigned int
+{
+    reserved,
+    loader_code,
+    loader_data,
+    boot_service_code,
+    boot_service_data,
+    runtime_services_code,
+    runtime_services_data,
+    conventional,
+    unusable,
+    acpi_reclaim,
+    acpi_nvs,
+    mmio,
+    mmio_port_space,
+    pal_code,
+    max_memory_type
+};
+
+enum reset_type : unsigned int
+{
+    cold,
+    warm,
+    shutdown,
+    platform_specific
+};
+
+//=================================================================================================
 // EFI defined protocols
 //
 // In the abstract, a protocol consists of a 128-bit globally unique identifier (GUID)
@@ -86,50 +159,52 @@ public:
     }
 };
 
-//=================================================================================================
-// EFI defined supplemental types
-//=================================================================================================
+struct system_table_t;
 
-struct time_t
+class device_path_protocol_t
 {
-    uint16_t Year;         // 1900 - 9999
-    uint8_t  Month;        // 1 - 12
-    uint8_t  Day;          // 1 - 31
-    uint8_t  Hour;         // 0 - 23
-    uint8_t  Minute;       // 0 - 59
-    uint8_t  Second;       // 0 - 59
-    uint8_t  Pad1;
-    uint32_t Nanosecond;   // 0 - 999,999,999
-    int16_t  TimeZone;     // -1440 - 1440 or 2047
-    uint8_t  Daylight;
-    uint8_t  Pad2;
+public:
+    uint8_t  Type;
+    uint8_t  Subtype;
+    uint16_t Length;
+
+public:
+    static constexpr guid_t guid = {0xa1,0x31,0x1b,0x5b,0x62,0x95,0xd2,0x11,
+                                    0x8e,0x3f,0x00,0xa0,0xc9,0x69,0x72,0x3b};
 };
 
-struct time_capabilities_t
+class loaded_image_protocol_t
 {
-    uint32_t Resolution;
-    uint32_t Accuracy;
-    uint8_t  SetsToZero;
+public:
+    uint32_t                Revision;
+    handle_t                ParentHandle;
+    system_table_t*         SystemTable;
+
+    handle_t                DeviceHandle;
+    device_path_protocol_t* FilePath;
+    void*                   Reserved;
+
+    uint32_t                LoadOptionsSize;
+    void*                   LoadOptions;
+
+    void*                   ImageBase;
+    uint64_t                ImageSize;
+    memory_type             ImageCodeType;
+    memory_type             ImageDataType;
+    status_t (EFIAPI *Unload)(
+        EFI_IN handle_t ImageHandle);
+
+public:
+    static constexpr guid_t guid = {0xa1,0x31,0x1b,0x5b,0x62,0x95,0xd2,0x11,
+                                    0x8e,0x3f,0x00,0xa0,0xc9,0x69,0x72,0x3b};
+
 };
 
-/**
- * Descriptor for virtual memory and memory map operations.
- */
-struct memory_descriptor_t
+class loaded_image_path_protocol_t : public device_path_protocol_t
 {
-    uint32_t           Type;
-    physical_address_t PhysicalStart;
-    virtual_address_t  VirtualStart;
-    uint64_t           NumberOfPages;
-    uint64_t           Attribute;
-};
-
-enum reset_type : unsigned int
-{
-    cold,
-    warm,
-    shutdown,
-    platform_specific
+public:
+    static constexpr guid_t guid = {0xa1,0x31,0x1b,0x5b,0x62,0x95,0xd2,0x11,
+                                    0x8e,0x3f,0x00,0xa0,0xc9,0x69,0x72,0x3b};
 };
 
 //=================================================================================================
