@@ -43,6 +43,8 @@ enum : status_t {
     EFI_ERROR = 1
 };
 
+#define EFI_ERROR(e) (e != EFI_SUCCESS)
+
 typedef handle_t EFI_SIMPLE_TEXT_INPUT_PROTOCOL; //temp
 
 //=================================================================================================
