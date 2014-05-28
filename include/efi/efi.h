@@ -384,6 +384,4 @@ public:
     runtime_services_t& get_runtime() { return *RuntimeServices; }
 };
 
-void InitializeLib(handle_t ImageHandle, system_table_t *systemTable);
-
 } // efi namespace
