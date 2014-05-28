@@ -154,7 +154,7 @@ struct table_header_t
  */
 class boot_services_t : public table_header_t
 {
-    static const uint64_t SIGNATURE = 0x56524553544f4f42;
+    static constexpr uint64_t SIGNATURE = 0x56524553544f4f42;
 
     //
     // Task Priority services
@@ -294,7 +294,7 @@ public:
  */
 struct runtime_services_t : public table_header_t
 {
-    static const uint64_t SIGNATURE = 0x56524553544e5552;
+    static constexpr uint64_t SIGNATURE = 0x56524553544e5552;
 
     //
     // Time services
@@ -365,7 +365,7 @@ struct configuration_table_t
  */
 struct system_table_t : public table_header_t
 {
-    static const uint64_t SIGNATURE = 0x5453595320494249;
+    static constexpr uint64_t SIGNATURE = 0x5453595320494249;
 
     wchar_t*                         FirmwareVendor;
     uint32_t                         FirmwareRevision;
