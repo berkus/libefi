@@ -316,7 +316,7 @@ class boot_services_t : public table_header_t
     /// on behalf of the calling agent.
     status_t (EFIAPI *_OpenProtocol)(
         EFI_IN               handle_t Handle,
-        EFI_IN               guid_t*  Protocol,
+        EFI_IN               guid_t const Protocol,
         EFI_OUT EFI_OPTIONAL void**   Interface,
         EFI_IN               handle_t AgentHandle,
         EFI_IN EFI_OPTIONAL  handle_t ControllerHandle,
@@ -324,7 +324,7 @@ class boot_services_t : public table_header_t
     /// Closes a protocol on a handle that was opened using OpenProtocol().
     status_t (EFIAPI *_CloseProtocol)(
         EFI_IN               handle_t Handle,
-        EFI_IN               guid_t*  Protocol,
+        EFI_IN               guid_t const Protocol,
         EFI_IN               handle_t AgentHandle,
         EFI_IN EFI_OPTIONAL  handle_t ControllerHandle); // EFI 1.1+
     /// Retrieves the list of agents that currently have a protocol interface opened.
