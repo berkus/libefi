@@ -362,6 +362,31 @@ class boot_services_t : public table_header_t
 
 public:
     inline bool is_valid_signature() const { return Signature == SIGNATURE; }
+
+    status_t exit_boot_services(handle_t handle, unsigned int map_key) {
+        return _ExitBootServices(handle, map_key);
+    }
+
+    template <typename T>
+    T* open_protocol(handle_t handle,
+        handle_t agent_handle, uint32_t attr, handle_t ctl_handle = nullptr)
+    {
+        T* interface;
+        status_t result = _OpenProtocol(handle, T::guid,
+            (void**)&interface, agent_handle, ctl_handle, attr);
+        if (EFI_ERROR(result)) {
+            // @todo throw
+            return nullptr;
+        }
+        return interface;
+    }
+
+    template <typename T>
+    status_t close_protocol(handle_t handle,
+        handle_t agent_handle, handle_t ctl_handle = nullptr)
+    {
+        return _CloseProtocol(handle, T::guid, agent_handle, ctl_handle);
+    }
 };
 
 /**
@@ -456,9 +481,18 @@ struct system_table_t : public table_header_t
     configuration_table_t*           ConfigurationTable;
 
 public:
-    inline bool is_valid_signature() const { return Signature == SIGNATURE; }
-
-    runtime_services_t& get_runtime() { return *RuntimeServices; }
+    inline bool is_valid_signature() const {
+        return Signature == SIGNATURE;
+    }
+    runtime_services_t& get_runtime_services() {
+        return *RuntimeServices;
+    }
+    inline bool has_boot_services() const {
+        return BootServices != nullptr;
+    }
+    boot_services_t* get_boot_services() {
+        return BootServices;
+    }
 };
 
 } // efi namespace
