@@ -25,15 +25,15 @@ namespace efi {
 // EFI defined types
 //=================================================================================================
 
-typedef unsigned int status_t;
-typedef void*        handle_t;
-typedef handle_t     image_t;
-typedef void*        EFI_EVENT;
-typedef char         guid_t[16];
-typedef uint64_t     EFI_LBA;
-typedef unsigned int EFI_TPL;
-typedef uint64_t     physical_address_t;
-typedef uint64_t     virtual_address_t;
+typedef unsigned int  status_t;
+typedef void*         handle_t;
+typedef handle_t      image_t;
+typedef void*         event_t;
+typedef unsigned char guid_t[16];
+typedef uint64_t      lba_t;
+typedef unsigned int  tpl_t;
+typedef uint64_t      physical_address_t;
+typedef uint64_t      virtual_address_t;
 
 /**
  * Return error codes. @todo Complete!
