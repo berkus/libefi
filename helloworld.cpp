@@ -16,7 +16,8 @@ _efi_main(handle_t ImageHandle, system_table_t *st)
     st->ConOut->output_string(L"\r\n");
 
     auto image = st->get_boot_services()->
-        open_protocol<efi::loaded_image_protocol_t>(ImageHandle, ImageHandle, 0);
+        open_protocol<efi::loaded_image_protocol_t>(ImageHandle, ImageHandle,
+            open_protocol_attribute::by_handle_protocol);
 
     image->Unload(ImageHandle);
     // wchar_t buf[256];

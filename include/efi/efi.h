@@ -120,6 +120,16 @@ enum reset_type : unsigned int
     platform_specific
 };
 
+enum open_protocol_attribute : unsigned int
+{
+    by_handle_protocol = 0x1,
+    get_protocol = 0x2,
+    test_protocol = 0x4,
+    by_child_controller = 0x8,
+    by_driver = 0x10,
+    exclusive = 0x20
+};
+
 //=================================================================================================
 // EFI defined protocols
 //
