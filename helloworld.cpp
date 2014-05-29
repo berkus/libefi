@@ -46,6 +46,16 @@ _efi_main(handle_t ImageHandle, system_table_t *st)
         st->ConOut->output_string(L"Image protocol obtained successfully\r\n");
     }
 
+    auto path = st->get_boot_services()->
+        open_protocol<efi::loaded_image_device_path_protocol_t>(ImageHandle,
+            ImageHandle, open_protocol_attribute::by_handle_protocol);
+
+    if (!path) {
+        st->ConOut->output_string(L"Error getting path protocol\r\n");
+    } else {
+        st->ConOut->output_string(L"Path protocol obtained successfully\r\n");
+    }
+
     // wchar_t buf[256];
     // swprintf(buf, 256, L"%llu", image->ImageSize);
 
