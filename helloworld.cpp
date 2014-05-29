@@ -40,7 +40,12 @@ _efi_main(handle_t ImageHandle, system_table_t *st)
         open_protocol<efi::loaded_image_protocol_t>(ImageHandle, ImageHandle,
             open_protocol_attribute::by_handle_protocol);
 
-    image->Unload(ImageHandle);
+    if (!image) {
+        st->ConOut->output_string(L"Error getting image protocol\r\n");
+    } else {
+        st->ConOut->output_string(L"Image protocol obtained successfully\r\n");
+    }
+
     // wchar_t buf[256];
     // swprintf(buf, 256, L"%llu", image->ImageSize);
 
