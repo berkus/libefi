@@ -15,6 +15,27 @@ _efi_main(handle_t ImageHandle, system_table_t *st)
     st->ConOut->output_string(st->FirmwareVendor);
     st->ConOut->output_string(L"\r\n");
 
+    if (st->is_valid_signature()) {
+        st->ConOut->output_string(L"System table signature is valid\r\n");
+    } else {
+        st->ConOut->output_string(L"Invalid system table signature\r\n");
+        return EFI_ERROR;
+    }
+
+    if (st->get_boot_services()->is_valid_signature()) {
+        st->ConOut->output_string(L"Boot services table signature is valid\r\n");
+    } else {
+        st->ConOut->output_string(L"Invalid boot services table signature\r\n");
+        return EFI_ERROR;
+    }
+
+    if (st->get_runtime_services().is_valid_signature()) {
+        st->ConOut->output_string(L"Runtime services table signature is valid\r\n");
+    } else {
+        st->ConOut->output_string(L"Invalid runtime services table signature\r\n");
+        return EFI_ERROR;
+    }
+
     auto image = st->get_boot_services()->
         open_protocol<efi::loaded_image_protocol_t>(ImageHandle, ImageHandle,
             open_protocol_attribute::by_handle_protocol);
